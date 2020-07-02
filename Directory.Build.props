@@ -32,7 +32,7 @@
     <NeutralLanguage>en</NeutralLanguage>
     <OverwriteReadOnlyFiles>true</OverwriteReadOnlyFiles>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/synercoder/test-net-core-actions/</RepositoryUrl>
+    <RepositoryUrl>https://github.com/synercoder/Primitives/</RepositoryUrl>
     <RestoreSources>
       https://api.nuget.org/v3/index.json;
       https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json;
