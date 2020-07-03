@@ -33,7 +33,7 @@ namespace Synercoding.Primitives.Extensions
         /// <param name="size">The size to base the <see cref="Rectangle"/> on</param>
         /// <returns>A new <see cref="Rectangle"/></returns>
         public static Rectangle AsRectangle(this Size size)
-            => new Rectangle(new UnitValue(0, size.Width.Unit), new UnitValue(0, size.Height.Unit), size.Width, size.Height);
+            => new Rectangle(new Value(0, size.Width.Unit), new Value(0, size.Height.Unit), size.Width, size.Height);
 
         /// <summary>
         /// Get a <see cref="Size"/> where the Width and Height are switched

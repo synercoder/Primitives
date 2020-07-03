@@ -4,14 +4,14 @@ using Xunit;
 
 namespace Synercoding.Primitives.Tests
 {
-    public class UnitValueTests
+    public class ValueTests
     {
         [Fact]
         public void LessThanOperator_MillimetersAndInch_IsSmaller()
         {
             // Arrange
-            var mm = new UnitValue(1, Unit.Millimeters);
-            var inch = new UnitValue(1, Unit.Inches);
+            var mm = new Value(1, Unit.Millimeters);
+            var inch = new Value(1, Unit.Inches);
 
             // Act
             var result = mm < inch;
@@ -24,8 +24,8 @@ namespace Synercoding.Primitives.Tests
         public void LessThanOperator_PointsAndMillimeters_IsSmaller()
         {
             // Arrange
-            var mm = new UnitValue(1, Unit.Millimeters);
-            var point = new UnitValue(1, Unit.Points);
+            var mm = new Value(1, Unit.Millimeters);
+            var point = new Value(1, Unit.Points);
 
             // Act
             var result = point < mm;
@@ -38,8 +38,8 @@ namespace Synercoding.Primitives.Tests
         public void EqualsOperator_25dot4MmAndOneInch_AreEqual()
         {
             // Arrange
-            var mm = new UnitValue(25.4, Unit.Millimeters);
-            var inch = new UnitValue(1, Unit.Inches);
+            var mm = new Value(25.4, Unit.Millimeters);
+            var inch = new Value(1, Unit.Inches);
 
             // Act
             var result = mm == inch;
@@ -52,22 +52,22 @@ namespace Synercoding.Primitives.Tests
         public void Convert_OneInchToMillimeters_25dot4Millimeters()
         {
             // Arrange
-            var inch = new UnitValue(1, Unit.Inches);
+            var inch = new Value(1, Unit.Inches);
 
             // Act
             var mm = inch.ConvertTo(Unit.Millimeters);
 
             // Assert
             Assert.True(mm.Unit == Unit.Millimeters);
-            Assert.True(mm.Value == 25.4);
+            Assert.True(mm.Raw == 25.4);
         }
 
         [Fact]
         public void EqualsOperator_72pointsAndOneInch_AreEqual()
         {
             // Arrange
-            var points = new UnitValue(72, Unit.Points);
-            var inch = new UnitValue(1, Unit.Inches);
+            var points = new Value(72, Unit.Points);
+            var inch = new Value(1, Unit.Inches);
 
             // Act
             var result = points == inch;
@@ -80,8 +80,8 @@ namespace Synercoding.Primitives.Tests
         public void EqualsOperator_600pxAt300dpiAndTwoInches_AreEqual()
         {
             // Arrange
-            var pixels = new UnitValue(600, Unit.Pixels(300));
-            var inch = new UnitValue(2, Unit.Inches);
+            var pixels = new Value(600, Unit.Pixels(300));
+            var inch = new Value(2, Unit.Inches);
 
             // Act
             var result = pixels == inch;
@@ -94,9 +94,9 @@ namespace Synercoding.Primitives.Tests
         public void AdditionOperator_MillimetersAndInches_ResultIs26dot4mm()
         {
             // Arrange
-            var mm = new UnitValue(1, Unit.Millimeters);
-            var inch = new UnitValue(1, Unit.Inches);
-            var expected = new UnitValue(26.4, Unit.Millimeters);
+            var mm = new Value(1, Unit.Millimeters);
+            var inch = new Value(1, Unit.Inches);
+            var expected = new Value(26.4, Unit.Millimeters);
 
             // Act
             var result = mm + inch;
@@ -109,8 +109,8 @@ namespace Synercoding.Primitives.Tests
         public void DivisionOperator_1cmAnd1mm_containes10times()
         {
             // Arrange
-            var cm = new UnitValue(1, Unit.Centimeters);
-            var mm = new UnitValue(1, Unit.Millimeters);
+            var cm = new Value(1, Unit.Centimeters);
+            var mm = new Value(1, Unit.Millimeters);
             var expected = 10;
 
             // Act
@@ -145,15 +145,15 @@ namespace Synercoding.Primitives.Tests
         {
             // Arrange
             var left = 2d;
-            var right = new UnitValue(5, Unit.Millimeters);
-            var expected = new UnitValue(10, Unit.Millimeters);
+            var right = new Value(5, Unit.Millimeters);
+            var expected = new Value(10, Unit.Millimeters);
 
             // Act
             var result = left * right;
 
             // Assert
             Assert.Equal(expected, result);
-            Assert.Equal(expected.Value, result.Value);
+            Assert.Equal(expected.Raw, result.Raw);
             Assert.Equal(expected.Unit, result.Unit);
         }
 
@@ -161,16 +161,16 @@ namespace Synercoding.Primitives.Tests
         public void MultiplicationOperator_WithRightDouble_IsUnitValue()
         {
             // Arrange
-            var left = new UnitValue(5, Unit.Millimeters);
+            var left = new Value(5, Unit.Millimeters);
             var right = 2d;
-            var expected = new UnitValue(10, Unit.Millimeters);
+            var expected = new Value(10, Unit.Millimeters);
 
             // Act
             var result = left * right;
 
             // Assert
             Assert.Equal(expected, result);
-            Assert.Equal(expected.Value, result.Value);
+            Assert.Equal(expected.Raw, result.Raw);
             Assert.Equal(expected.Unit, result.Unit);
         }
     }
