@@ -18,10 +18,10 @@ namespace Synercoding.Primitives
         /// <param name="unit">The unit type of the coordinates</param>
         public Rectangle(double llx, double lly, double urx, double ury, Unit unit)
         {
-            LLX = new UnitValue(llx, unit);
-            LLY = new UnitValue(lly, unit);
-            URX = new UnitValue(urx, unit);
-            URY = new UnitValue(ury, unit);
+            LLX = new Value(llx, unit);
+            LLY = new Value(lly, unit);
+            URX = new Value(urx, unit);
+            URY = new Value(ury, unit);
         }
 
         /// <summary>
@@ -31,7 +31,7 @@ namespace Synercoding.Primitives
         /// <param name="lly">The lower left y coordinate</param>
         /// <param name="urx">The upper right x coordinate</param>
         /// <param name="ury">The upper right y coordinate</param>
-        public Rectangle(UnitValue llx, UnitValue lly, UnitValue urx, UnitValue ury)
+        public Rectangle(Value llx, Value lly, Value urx, Value ury)
         {
             LLX = llx;
             LLY = lly;
@@ -70,7 +70,7 @@ namespace Synercoding.Primitives
         /// <param name="lly">The out parameter for the lower left y coordinate</param>
         /// <param name="urx">The out parameter for the upper right x coordinate</param>
         /// <param name="ury">The out parameter for the upper right y coordinate</param>
-        public void Deconstruct(out UnitValue llx, out UnitValue lly, out UnitValue urx, out UnitValue ury)
+        public void Deconstruct(out Value llx, out Value lly, out Value urx, out Value ury)
         {
             llx = LLX;
             lly = LLY;
@@ -87,33 +87,33 @@ namespace Synercoding.Primitives
         /// <summary>
         /// The lower left x coordinate
         /// </summary>
-        public UnitValue LLX { get; }
+        public Value LLX { get; }
 
         /// <summary>
         /// The lower left y coordinate
         /// </summary>
-        public UnitValue LLY { get; }
+        public Value LLY { get; }
 
         /// <summary>
         /// The upper right x coordinate
         /// </summary>
-        public UnitValue URX { get; }
+        public Value URX { get; }
 
         /// <summary>
         /// The upper right y coordinate
         /// </summary>
-        public UnitValue URY { get; }
+        public Value URY { get; }
 
         /// <summary>
         /// The width of this <see cref="Rectangle"/>
         /// </summary>
-        public UnitValue Width
+        public Value Width
             => URX - LLX;
 
         /// <summary>
         /// The height of this <see cref="Rectangle"/>
         /// </summary>
-        public UnitValue Height
+        public Value Height
             => URY - LLY;
 
         /// <summary>
@@ -143,10 +143,8 @@ namespace Synercoding.Primitives
             => HashCode.Combine(LLX, LLY, URX, URY);
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            return obj is Rectangle unit && Equals(unit);
-        }
+        public override bool Equals(object? obj)
+            => obj is Rectangle unit && Equals(unit);
 
         /// <inheritdoc/>
         public bool Equals(Rectangle other)
@@ -163,5 +161,23 @@ namespace Synercoding.Primitives
         /// <inheritdoc/>
         public override string ToString()
             => $"LLX {LLX}, LLY {LLY}, URX {URX}, URY {URY}";
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Rectangle"/> values are equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are equal; otherwise, false.</returns>
+        public static bool operator ==(Rectangle left, Rectangle right)
+            => left.Equals(right);
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Rectangle"/> values are not equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are not equal; otherwise, false.</returns>
+        public static bool operator !=(Rectangle left, Rectangle right)
+            => !( left == right );
     }
 }

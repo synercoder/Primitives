@@ -39,12 +39,8 @@ namespace Synercoding.Primitives
             => $"{Designation.Shortform()} ({PerInch} per inch)";
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            if (obj is Unit unit)
-                return Equals(unit);
-            return false;
-        }
+        public override bool Equals(object? obj)
+            => obj is Unit unit && Equals(unit);
 
         /// <inheritdoc/>
         public override int GetHashCode() => HashCode.Combine(PerInch, Designation);
@@ -55,10 +51,7 @@ namespace Synercoding.Primitives
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>true if left and right are equal; otherwise, false.</returns>
-        public static bool operator ==(Unit left, Unit right)
-        {
-            return left.Equals(right);
-        }
+        public static bool operator ==(Unit left, Unit right) => left.Equals(right);
 
         /// <summary>
         ///  Returns a value that indicates whether two specified <see cref="Unit"/> values are not equal.
@@ -66,10 +59,7 @@ namespace Synercoding.Primitives
         /// <param name="left">The first value to compare.</param>
         /// <param name="right">The second value to compare.</param>
         /// <returns>true if left and right are not equal; otherwise, false.</returns>
-        public static bool operator !=(Unit left, Unit right)
-        {
-            return !(left == right);
-        }
+        public static bool operator !=(Unit left, Unit right) => !( left == right );
 
         /// <summary>
         /// Unit for millimeters

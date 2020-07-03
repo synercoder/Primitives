@@ -19,5 +19,33 @@ namespace Synercoding.Primitives.Tests
             // Assert
             Assert.Equal(expected, result);
         }
+
+        [Fact]
+        public void EqualityOperator_InchAndMillimeters_NotEqual()
+        {
+            // Arrange
+            var mmRectangle = new Rectangle(1, 1, 1, 1, Unit.Millimeters);
+            var inRectangle = new Rectangle(1, 1, 1, 1, Unit.Inches);
+
+            // Act
+            var result = mmRectangle == inRectangle;
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void EqualityOperator_InchAnd254Millimeters_AreEqual()
+        {
+            // Arrange
+            var mmRectangle = new Rectangle(25.4, 25.4, 25.4, 25.4, Unit.Millimeters);
+            var inRectangle = new Rectangle(1, 1, 1, 1, Unit.Inches);
+
+            // Act
+            var result = mmRectangle == inRectangle;
+
+            // Assert
+            Assert.True(result);
+        }
     }
 }
