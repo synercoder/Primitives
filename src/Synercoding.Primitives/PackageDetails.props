@@ -10,7 +10,12 @@
     <Product>Synercoding.Primitives</Product>
     <Title>Synercoding.Primitives</Title>
     <Description>Primitives with types attached (think mm, cm, in, px) that can be used for 2D graphics.</Description>
-    <PackageReleaseNotes>Initial alpha release.</PackageReleaseNotes>
+    <PackageReleaseNotes>- Removed implicit double conversion, to easy to make a mistake with the wrong unit type
+- Added equality and inequality operators to all structs
+- Added multiple target-frameworks
+- Added multiplication operator for Value on other side
+- Renamed UnitValue to Value
+- Fixed a few nullability warnings</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
