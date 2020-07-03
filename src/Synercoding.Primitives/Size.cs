@@ -83,10 +83,8 @@ namespace Synercoding.Primitives
             => HashCode.Combine(Width, Height);
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            return obj is Size unit && Equals(unit);
-        }
+        public override bool Equals(object? obj)
+            => obj is Size unit && Equals(unit);
 
         /// <inheritdoc/>
         public bool Equals(Size other)

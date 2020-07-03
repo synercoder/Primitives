@@ -105,10 +105,8 @@ namespace Synercoding.Primitives
             => HashCode.Combine(Left, Top, Right, Bottom);
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            return obj is Spacing unit && Equals(unit);
-        }
+        public override bool Equals(object? obj)
+            => obj is Spacing unit && Equals(unit);
 
         /// <inheritdoc/>
         public bool Equals(Spacing other)
