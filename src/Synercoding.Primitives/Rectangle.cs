@@ -163,5 +163,23 @@ namespace Synercoding.Primitives
         /// <inheritdoc/>
         public override string ToString()
             => $"LLX {LLX}, LLY {LLY}, URX {URX}, URY {URY}";
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Rectangle"/> values are equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are equal; otherwise, false.</returns>
+        public static bool operator ==(Rectangle left, Rectangle right)
+            => left.Equals(right);
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Rectangle"/> values are not equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are not equal; otherwise, false.</returns>
+        public static bool operator !=(Rectangle left, Rectangle right)
+            => !( left == right );
     }
 }

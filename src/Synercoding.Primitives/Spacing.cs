@@ -121,5 +121,23 @@ namespace Synercoding.Primitives
                 && a.Right == b.Right
                 && a.Bottom == b.Bottom;
         }
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Spacing"/> values are equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are equal; otherwise, false.</returns>
+        public static bool operator ==(Spacing left, Spacing right)
+            => left.Equals(right);
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Spacing"/> values are not equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are not equal; otherwise, false.</returns>
+        public static bool operator !=(Spacing left, Spacing right)
+            => !( left == right );
     }
 }

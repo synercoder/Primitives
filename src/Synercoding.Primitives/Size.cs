@@ -101,5 +101,23 @@ namespace Synercoding.Primitives
         /// <inheritdoc/>
         public override string ToString()
             => $"W: {Width}, H: {Height}";
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Size"/> values are equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are equal; otherwise, false.</returns>
+        public static bool operator ==(Size left, Size right)
+            => left.Equals(right);
+
+        /// <summary>
+        ///  Returns a value that indicates whether two specified <see cref="Size"/> values are not equal.
+        /// </summary>
+        /// <param name="left">The first value to compare.</param>
+        /// <param name="right">The second value to compare.</param>
+        /// <returns>true if left and right are not equal; otherwise, false.</returns>
+        public static bool operator !=(Size left, Size right)
+            => !( left == right );
     }
 }
