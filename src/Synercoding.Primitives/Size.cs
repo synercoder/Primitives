@@ -16,8 +16,8 @@ namespace Synercoding.Primitives
         /// <param name="unit">The unit of the <see cref="Size"/></param>
         public Size(double width, double height, Unit unit)
         {
-            Width = new UnitValue(width, unit);
-            Height = new UnitValue(height, unit);
+            Width = new Value(width, unit);
+            Height = new Value(height, unit);
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Synercoding.Primitives
         /// </summary>
         /// <param name="width">The width parameter</param>
         /// <param name="height">The height parameter</param>
-        public Size(UnitValue width, UnitValue height)
+        public Size(Value width, Value height)
         {
             Width = width;
             Height = height;
@@ -36,7 +36,7 @@ namespace Synercoding.Primitives
         /// </summary>
         /// <param name="width">Out parameter for the <see cref="Width"/> property</param>
         /// <param name="height">Out parameter for the <see cref="Height"/> property</param>
-        public void Deconstruct(out UnitValue width, out UnitValue height)
+        public void Deconstruct(out Value width, out Value height)
         {
             width = Width;
             height = Height;
@@ -51,12 +51,12 @@ namespace Synercoding.Primitives
         /// <summary>
         /// The width property
         /// </summary>
-        public UnitValue Width { get; }
+        public Value Width { get; }
 
         /// <summary>
         /// The height property
         /// </summary>
-        public UnitValue Height { get; }
+        public Value Height { get; }
 
         /// <summary>
         /// Get the <see cref="Primitives.Orientation"/> of the size

@@ -16,8 +16,8 @@ namespace Synercoding.Primitives
         /// <param name="unit">The unit type of the coordinates</param>
         public Point(double x, double y, Unit unit)
         {
-            X = new UnitValue(x, unit);
-            Y = new UnitValue(y, unit);
+            X = new Value(x, unit);
+            Y = new Value(y, unit);
         }
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace Synercoding.Primitives
         /// </summary>
         /// <param name="x">The X coordinate</param>
         /// <param name="y">The Y coordinate</param>
-        public Point(UnitValue x, UnitValue y)
+        public Point(Value x, Value y)
         {
             X = x;
             Y = y;
@@ -36,7 +36,7 @@ namespace Synercoding.Primitives
         /// </summary>
         /// <param name="x">Out parameter for the <see cref="X"/> property</param>
         /// <param name="y">Out parameter for the <see cref="Y"/> property</param>
-        public void Deconstruct(out UnitValue x, out UnitValue y)
+        public void Deconstruct(out Value x, out Value y)
         {
             x = X;
             y = Y;
@@ -51,12 +51,12 @@ namespace Synercoding.Primitives
         /// <summary>
         /// The X coordinate
         /// </summary>
-        public UnitValue X { get; }
+        public Value X { get; }
 
         /// <summary>
         /// The Y coordinate
         /// </summary>
-        public UnitValue Y { get; }
+        public Value Y { get; }
 
         /// <inheritdoc />
         public Point ConvertTo(Unit unit)

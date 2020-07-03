@@ -27,10 +27,10 @@ namespace Synercoding.Primitives
         /// <param name="unit">The unit of the <paramref name="unit"/> parameter.</param>
         public Spacing(double left, double top, double right, double bottom, Unit unit)
         {
-            Left = new UnitValue(left, unit);
-            Top = new UnitValue(top, unit);
-            Right = new UnitValue(right, unit);
-            Bottom = new UnitValue(bottom, unit);
+            Left = new Value(left, unit);
+            Top = new Value(top, unit);
+            Right = new Value(right, unit);
+            Bottom = new Value(bottom, unit);
         }
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Synercoding.Primitives
         /// <param name="top">The amount of top spacing</param>
         /// <param name="right">The amount of right spacing</param>
         /// <param name="bottom">The amount of bottom spacing</param>
-        public Spacing(UnitValue left, UnitValue top, UnitValue right, UnitValue bottom)
+        public Spacing(Value left, Value top, Value right, Value bottom)
         {
             Left = left;
             Top = top;
@@ -55,7 +55,7 @@ namespace Synercoding.Primitives
         /// <param name="top">Out parameter for the <see cref="Top"/> property</param>
         /// <param name="right">Out parameter for the <see cref="Right"/> property</param>
         /// <param name="bottom">Out parameter for the <see cref="Bottom"/> property</param>
-        public void Deconstruct(out UnitValue left, out UnitValue top, out UnitValue right, out UnitValue bottom)
+        public void Deconstruct(out Value left, out Value top, out Value right, out Value bottom)
         {
             left = Left;
             top = Top;
@@ -72,22 +72,22 @@ namespace Synercoding.Primitives
         /// <summary>
         /// The amount of spacing on the left side
         /// </summary>
-        public UnitValue Left { get; }
+        public Value Left { get; }
 
         /// <summary>
         /// The amount of spacing on the top side
         /// </summary>
-        public UnitValue Top { get; }
+        public Value Top { get; }
 
         /// <summary>
         /// The amount of spacing on the right side
         /// </summary>
-        public UnitValue Right { get; }
+        public Value Right { get; }
 
         /// <summary>
         /// The amount of spacing on the bottom side
         /// </summary>
-        public UnitValue Bottom { get; }
+        public Value Bottom { get; }
 
         /// <inheritdoc/>
         public Spacing ConvertTo(Unit unit)
