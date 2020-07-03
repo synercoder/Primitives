@@ -238,12 +238,5 @@ namespace Synercoding.Primitives
         /// <returns>The result of the division operation</returns>
         public static double operator /(Value a, double b)
             => a.Raw / b;
-
-        /// <summary>
-        /// Convert the <see cref="Value"/> to a <see cref="double"/>, losing the <see cref="Unit"/> in the process.
-        /// </summary>
-        /// <param name="value">The <see cref="double"/> value of this <see cref="Value"/></param>
-        public static implicit operator double(Value value) 
-            => value.Raw;
     }
 }

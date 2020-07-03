@@ -93,10 +93,10 @@ namespace Synercoding.Primitives
         public Spacing ConvertTo(Unit unit)
         {
             return new Spacing(
-                left: Left.ConvertTo(unit),
-                top: Top.ConvertTo(unit),
-                right: Right.ConvertTo(unit),
-                bottom: Bottom.ConvertTo(unit),
+                left: Left.ConvertTo(unit).Raw,
+                top: Top.ConvertTo(unit).Raw,
+                right: Right.ConvertTo(unit).Raw,
+                bottom: Bottom.ConvertTo(unit).Raw,
                 unit);
         }
 
