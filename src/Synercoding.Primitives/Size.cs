@@ -73,8 +73,8 @@ namespace Synercoding.Primitives
         public Size ConvertTo(Unit unit)
         {
             return new Size(
-                width: Width.ConvertTo(unit),
-                height: Height.ConvertTo(unit),
+                width: Width.ConvertTo(unit).Raw,
+                height: Height.ConvertTo(unit).Raw,
                 unit);
         }
 
