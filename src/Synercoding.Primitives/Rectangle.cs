@@ -143,10 +143,8 @@ namespace Synercoding.Primitives
             => HashCode.Combine(LLX, LLY, URX, URY);
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            return obj is Rectangle unit && Equals(unit);
-        }
+        public override bool Equals(object? obj)
+            => obj is Rectangle unit && Equals(unit);
 
         /// <inheritdoc/>
         public bool Equals(Rectangle other)

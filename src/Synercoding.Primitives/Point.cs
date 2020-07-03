@@ -71,10 +71,8 @@ namespace Synercoding.Primitives
             => HashCode.Combine(X, Y);
 
         /// <inheritdoc />
-        public override bool Equals(object obj)
-        {
-            return obj is Point unit && Equals(unit);
-        }
+        public override bool Equals(object? obj)
+            => obj is Point unit && Equals(unit);
 
         /// <inheritdoc />
         public bool Equals(Point other)

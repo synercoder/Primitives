@@ -48,7 +48,7 @@ namespace Synercoding.Primitives
         }
 
         /// <inheritdoc/>
-        public int CompareTo(object obj)
+        public int CompareTo(object? obj)
         {
             if (obj is UnitValue unitValue)
                 return CompareTo(unitValue);
@@ -74,12 +74,8 @@ namespace Synercoding.Primitives
             => $"{Value} {Unit.Designation.Shortform()}";
 
         /// <inheritdoc/>
-        public override bool Equals(object obj)
-        {
-            if (obj is UnitValue unit)
-                return Equals(unit);
-            return false;
-        }
+        public override bool Equals(object? obj)
+            => obj is UnitValue unit && Equals(unit);
 
         /// <inheritdoc/>
         public bool Equals(UnitValue other) 
