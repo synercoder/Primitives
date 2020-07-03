@@ -139,5 +139,39 @@ namespace Synercoding.Primitives.Tests
 
             Assert.Throws<ArgumentException>(() => Unit.FromDesignation(designation));
         }
+
+        [Fact]
+        public void MultiplicationOperator_WithLeftDouble_IsUnitValue()
+        {
+            // Arrange
+            var left = 2d;
+            var right = new UnitValue(5, Unit.Millimeters);
+            var expected = new UnitValue(10, Unit.Millimeters);
+
+            // Act
+            var result = left * right;
+
+            // Assert
+            Assert.Equal(expected, result);
+            Assert.Equal(expected.Value, result.Value);
+            Assert.Equal(expected.Unit, result.Unit);
+        }
+
+        [Fact]
+        public void MultiplicationOperator_WithRightDouble_IsUnitValue()
+        {
+            // Arrange
+            var left = new UnitValue(5, Unit.Millimeters);
+            var right = 2d;
+            var expected = new UnitValue(10, Unit.Millimeters);
+
+            // Act
+            var result = left * right;
+
+            // Assert
+            Assert.Equal(expected, result);
+            Assert.Equal(expected.Value, result.Value);
+            Assert.Equal(expected.Unit, result.Unit);
+        }
     }
 }

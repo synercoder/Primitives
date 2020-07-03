@@ -217,6 +217,15 @@ namespace Synercoding.Primitives
             => new UnitValue(a.Value * b, a.Unit);
 
         /// <summary>
+        /// Multiply a given <see cref="UnitValue"/> by a <see cref="double"/>
+        /// </summary>
+        /// <param name="a">The <see cref="UnitValue"/> to multiply</param>
+        /// <param name="b">The <see cref="double"/> to multiply by</param>
+        /// <returns>The result of the multiplication operation</returns>
+        public static UnitValue operator *(double a, UnitValue b)
+            => new UnitValue(b.Value * a, b.Unit);
+
+        /// <summary>
         /// Divide a given <see cref="UnitValue"/> by another <see cref="UnitValue"/>
         /// </summary>
         /// <param name="a">The left side of the division operation</param>
