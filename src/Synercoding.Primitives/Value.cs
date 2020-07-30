@@ -82,6 +82,11 @@ namespace Synercoding.Primitives
             => CompareTo(other) == 0;
 
         /// <summary>
+        /// Represents a value of zero
+        /// </summary>
+        public static Value Zero => new Value(0, Unit.Inches);
+
+        /// <summary>
         ///  Returns a value that indicates whether two specified <see cref="Value"/> values are equal.
         /// </summary>
         /// <param name="left">The first value to compare.</param>
