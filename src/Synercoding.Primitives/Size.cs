@@ -59,6 +59,12 @@ namespace Synercoding.Primitives
         public Value Height { get; }
 
         /// <summary>
+        /// The rotated version of this <see cref="Size"/>; Same as calling var newSize = new Size(oldSize.Height, oldSize.Width);
+        /// </summary>
+        public Size Rotated
+            => new Size(Height, Width);
+
+        /// <summary>
         /// Get the <see cref="Primitives.Orientation"/> of the size
         /// </summary>
         public Orientation Orientation
