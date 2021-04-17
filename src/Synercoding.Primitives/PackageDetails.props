@@ -10,7 +10,10 @@
     <Product>Synercoding.Primitives</Product>
     <Title>Synercoding.Primitives</Title>
     <Description>Primitives with types attached (think mm, cm, in, px) that can be used for 2D graphics.</Description>
-    <PackageReleaseNotes>- Added Value.Zero</PackageReleaseNotes>
+    <PackageReleaseNotes>
+- Added extension method for Value .AsRaw(Unit)
+- Added Rotated property to size
+    </PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
