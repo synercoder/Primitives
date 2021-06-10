@@ -46,10 +46,8 @@ using System.Runtime.CompilerServices;
 
 [assembly: TypeForwardedTo(typeof(System.HashCode))]
 #else
-using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 
@@ -82,7 +80,7 @@ namespace System
                 rng.GetBytes(data);
             }
 
-            return BinaryPrimitives.ReadUInt32LittleEndian(data);
+            return BitConverter.ToUInt32(data, 0);
         }
 
         public static int Combine<T1>(T1 value1)
