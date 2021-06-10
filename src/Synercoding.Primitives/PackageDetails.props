@@ -9,10 +9,11 @@
     <PackageTags>Primitives Unit Graphics</PackageTags>
     <Product>Synercoding.Primitives</Product>
     <Title>Synercoding.Primitives</Title>
-    <Description>Primitives with types attached (think mm, cm, in, px) that can be used for 2D graphics.</Description>
+    <Description>Primitives with units attached (think mm, cm, in, px) that can be used for 2D graphics.</Description>
     <PackageReleaseNotes>
-- Added extension method for Value .AsRaw(Unit)
-- Added Rotated property to size
+- Added support for net452 &amp; net5.0.
+- Added a ValueCreator class, supposed to be used as a static using.
+- Added AsRaw extensions for Point &amp; Size
     </PackageReleaseNotes>
   </PropertyGroup>
 
