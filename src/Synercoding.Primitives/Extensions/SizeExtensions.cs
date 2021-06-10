@@ -42,5 +42,14 @@ namespace Synercoding.Primitives.Extensions
         /// <returns>A new size with width and height switched</returns>
         public static Size Rotate(this Size size)
             => new Size(size.Height, size.Width);
+
+        /// <summary>
+        /// Get the raw values representing this Size in a provided unit
+        /// </summary>
+        /// <param name="size">The size to get in raw format</param>
+        /// <param name="unit">The unit to get the result in.</param>
+        /// <returns>A tuple representing the raw values.</returns>
+        public static (double Width, double Height) AsRaw(this Size size, Unit unit)
+            => (size.Width.AsRaw(unit), size.Height.AsRaw(unit));
     }
 }
