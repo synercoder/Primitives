@@ -3,7 +3,7 @@ namespace Synercoding.Primitives
     /// <summary>
     /// Different designations for units
     /// </summary>
-    public enum UnitDesignation
+    public enum UnitDesignation : byte
     {
         /// <summary>
         /// Points, 72 per inch
