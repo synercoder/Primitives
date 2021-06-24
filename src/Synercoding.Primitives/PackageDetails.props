@@ -10,11 +10,7 @@
     <Product>Synercoding.Primitives</Product>
     <Title>Synercoding.Primitives</Title>
     <Description>Primitives with units attached (think mm, cm, in, px) that can be used for 2D graphics.</Description>
-    <PackageReleaseNotes>
-- Added support for net452 &amp; net5.0.
-- Added a ValueCreator class, supposed to be used as a static using.
-- Added AsRaw extensions for Point &amp; Size
-    </PackageReleaseNotes>
+    <PackageReleaseNotes> - Fixed value division by double</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
