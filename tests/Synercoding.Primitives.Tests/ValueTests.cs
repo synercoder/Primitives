@@ -121,6 +121,21 @@ namespace Synercoding.Primitives.Tests
         }
 
         [Fact]
+        public void DivisionOperator_1cmAnd2_Is0dot5cm()
+        {
+            // Arrange
+            var cm = new Value(1, Unit.Centimeters);
+            var amount = 2;
+            var expected = new Value(0.5, Unit.Centimeters);
+
+            // Act
+            var result = cm / amount;
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
         public void FromDesignation_AllEnumValuesExceptPx_DoesNotThrowNotImplementedException()
         {
             var unitDesignations = Enum.GetValues(typeof(UnitDesignation))

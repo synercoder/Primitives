@@ -241,7 +241,7 @@ namespace Synercoding.Primitives
         /// <param name="a">The <see cref="Value"/> to divide</param>
         /// <param name="b">The <see cref="double"/> to divisor</param>
         /// <returns>The result of the division operation</returns>
-        public static double operator /(Value a, double b)
-            => a.Raw / b;
+        public static Value operator /(Value a, double b)
+            => new Value(a.Raw / b, a.Unit);
     }
 }
