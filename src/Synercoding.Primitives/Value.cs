@@ -37,7 +37,7 @@ public readonly struct Value : IConvertable<Value>, IComparable, IComparable<Val
     /// <inheritdoc />
     public Value ConvertTo(Unit unit)
     {
-        if ((byte)unit.Designation == 0)
+        if (unit.Designation == 0)
             throw new ArgumentException("The provided unit was not initialized.", nameof(unit));
 
         if (Unit == unit)
