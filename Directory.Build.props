@@ -53,12 +53,11 @@
     | >=netcoreapp3.1   |   Y   |    Y     |         Y           |      Y      |        Y        |        Y           |      Y       |    Y    |      Y     |       Y       |
     | netstandard2.1    |   Y   |    Y     |         N           |      Y      |        Y        |        N           |      Y       |    N    |      Y     |       N       |
     | netstandard2.0    |   N   |    N     |         N           |      N      |        N        |        N           |      Y       |    N    |      N     |       N       |
-    | netstandard1.3    |   N   |    N     |         N           |      N      |        N        |        N           |      N       |    N    |      N     |       N       |
-    | net472, net48     |   N   |    N     |         Y           |      N      |        N        |        N           |      Y       |    N    |      N     |       N       |
+    | net48             |   N   |    N     |         Y           |      N      |        N        |        N           |      Y       |    N    |      N     |       N       |
     +===================+=======+==========+=====================+=============+=================+====================+==============+=========|============|===============|
     -->
   <Choose>
-    <When Condition="'$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'net48'">
+    <When Condition="'$(TargetFramework)' == 'net48'">
       <PropertyGroup>
         <DefineConstants>$(DefineConstants);SUPPORTS_EXTENDED_INTRINSICS</DefineConstants>
         <DefineConstants>$(DefineConstants);SUPPORTS_CODECOVERAGE</DefineConstants>
