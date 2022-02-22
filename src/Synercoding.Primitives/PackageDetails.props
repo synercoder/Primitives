@@ -10,13 +10,7 @@
     <Product>Synercoding.Primitives</Product>
     <Title>Synercoding.Primitives</Title>
     <Description>Primitives with units attached (think mm, cm, in, px) that can be used for 2D graphics.</Description>
-    <PackageReleaseNotes> - Added extra default UnitDesignation to indicate a value is not properly initialized.
- - Removed support for .NET 4.5.2 &amp; .NET Core 2.1
- - Added support for .NET 4.8 &amp; .NET 6.0
- - Improved XML docs.
- - Added extra constructor to Spacing
- - Added Pixels to ValueCreator
- - Added Parse and TryParse methods to: Unit &amp; Value</PackageReleaseNotes>
+    <PackageReleaseNotes> - Fix default value of unitdesignation</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>

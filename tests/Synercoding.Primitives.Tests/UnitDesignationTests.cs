@@ -20,4 +20,17 @@ public class UnitDesignationTests
         // Assert
         // No NotImplementedException thrown! Jeej
     }
+
+    [Fact]
+    public void DefaultValueIsNotDefined()
+    {
+        // Arrange
+        UnitDesignation value = 0;
+
+        // Act
+        var result = Enum.IsDefined(value);
+
+        // Assert
+        Assert.False(result);
+    }
 }
