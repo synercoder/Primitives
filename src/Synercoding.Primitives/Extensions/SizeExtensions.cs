@@ -9,8 +9,26 @@ public static class SizeExtensions
     /// Contract a given <see cref="Size"/> (make smaller).
     /// </summary>
     /// <param name="size">The <see cref="Size"/> to contract.</param>
+    /// <param name="value">The amount to contract of each side of the <see cref="Size"/></param>
+    /// <returns>A new contracted <see cref="Size"/>.</returns>
+    public static Size Contract(this Size size, Value value)
+        => size.Contract(new Spacing(value));
+
+    /// <summary>
+    /// Expand a given <see cref="Size"/> (make bigger).
+    /// </summary>
+    /// <param name="size">The <see cref="Size"/> to expand.</param>
+    /// <param name="value">The amount to expand to each side of the <see cref="Size"/></param>
+    /// <returns>A new expanded <see cref="Size"/>.</returns>
+    public static Size Expand(this Size size, Value value)
+        => size.Expand(new Spacing(value));
+
+    /// <summary>
+    /// Contract a given <see cref="Size"/> (make smaller).
+    /// </summary>
+    /// <param name="size">The <see cref="Size"/> to contract.</param>
     /// <param name="spacing">The amount of <see cref="Spacing"/> to contract on the sides.</param>
-    /// <returns>A new contacted <see cref="Size"/>.</returns>
+    /// <returns>A new contracted <see cref="Size"/>.</returns>
     public static Size Contract(this Size size, Spacing spacing)
         => new Size(
             width: size.Width - spacing.Left - spacing.Right,
