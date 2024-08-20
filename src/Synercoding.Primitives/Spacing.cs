@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Synercoding.Primitives;
@@ -7,7 +8,8 @@ namespace Synercoding.Primitives;
 /// <summary>
 /// Value type representing spacing in or around an object.
 /// </summary>
-public readonly struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>
+[JsonConverter(typeof(JsonConverters.SpacingJsonConverter))]
+public readonly record struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>
 {
     /// <summary>
     /// Constructor for <see cref="Spacing"/>.
@@ -81,22 +83,22 @@ public readonly struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>
     /// <summary>
     /// The amount of spacing on the left side.
     /// </summary>
-    public Value Left { get; }
+    public Value Left { get; init; }
 
     /// <summary>
     /// The amount of spacing on the top side.
     /// </summary>
-    public Value Top { get; }
+    public Value Top { get; init; }
 
     /// <summary>
     /// The amount of spacing on the right side.
     /// </summary>
-    public Value Right { get; }
+    public Value Right { get; init; }
 
     /// <summary>
     /// The amount of spacing on the bottom side.
     /// </summary>
-    public Value Bottom { get; }
+    public Value Bottom { get; init; }
 
     /// <inheritdoc/>
     public Spacing ConvertTo(Unit unit)
@@ -114,11 +116,13 @@ public readonly struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>
         => HashCode.Combine(Left, Top, Right, Bottom);
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
-        => obj is Spacing unit && Equals(unit);
+    public override string ToString()
+    {
+        if (Left == Top && Top == Right && Right == Bottom)
+            return $"All: {Left}";
 
-    /// <inheritdoc/>
-    public override string ToString() => $"L: {Left}, T: {Top}, R: {Right}, B: {Bottom}";
+        return $"L: {Left}, T: {Top}, R: {Right}, B: {Bottom}";
+    }
 
     /// <inheritdoc/>
     public bool Equals(Spacing other)
@@ -131,24 +135,6 @@ public readonly struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>
             && a.Right == b.Right
             && a.Bottom == b.Bottom;
     }
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Spacing"/> values are equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(Spacing left, Spacing right)
-        => left.Equals(right);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Spacing"/> values are not equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are not equal; otherwise, false.</returns>
-    public static bool operator !=(Spacing left, Spacing right)
-        => !( left == right );
 
     /// <summary>
     /// Parse a string into a <see cref="Spacing"/>
@@ -175,6 +161,12 @@ public readonly struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>
         spacing = default;
 
         s = s.Trim();
+
+        if (s.StartsWith("All:") && Value.TryParse(s.Substring(4).TrimStart(), out var all))
+        {
+            spacing = new Spacing(all);
+            return true;
+        }
 
         var match = Regex.Match(s, "^L: ?(.+), ?T: ?(.+), ?R: ?(.+), ?B: ?(.+)$");
         if (match.Success && match.Groups.Count == 5)

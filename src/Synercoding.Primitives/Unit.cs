@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Extensions;
 using System;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Synercoding.Primitives;
@@ -7,7 +8,8 @@ namespace Synercoding.Primitives;
 /// <summary>
 /// Value type representing an <see cref="Unit"/>.
 /// </summary>
-public readonly struct Unit : IEquatable<Unit>
+[JsonConverter(typeof(JsonConverters.UnitJsonConverter))]
+public readonly record struct Unit : IEquatable<Unit>
 {
     private Unit(double perInch, UnitDesignation unitDesignation)
     {
@@ -23,12 +25,12 @@ public readonly struct Unit : IEquatable<Unit>
     /// <summary>
     /// Value representing how many of this <see cref="Unit"/> are in an inch.
     /// </summary>
-    public double PerInch { get; }
+    public double PerInch { get; init; }
 
     /// <summary>
     /// The designation of the unit.
     /// </summary>
-    public UnitDesignation Designation { get; }
+    public UnitDesignation Designation { get; init; }
 
     /// <inheritdoc/>
     public bool Equals(Unit other)
@@ -45,27 +47,7 @@ public readonly struct Unit : IEquatable<Unit>
         => $"{Designation.Shortform()} ({PerInch} per inch)";
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
-        => obj is Unit unit && Equals(unit);
-
-    /// <inheritdoc/>
     public override int GetHashCode() => HashCode.Combine(PerInch, Designation);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Unit"/> values are equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(Unit left, Unit right) => left.Equals(right);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Unit"/> values are not equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are not equal; otherwise, false.</returns>
-    public static bool operator !=(Unit left, Unit right) => !( left == right );
 
     /// <summary>
     /// Unit for millimeters.
@@ -135,7 +117,7 @@ public readonly struct Unit : IEquatable<Unit>
     {
         s = s.Trim();
 
-        if (Enum.TryParse<UnitDesignation>(s, true, out var designation))
+        if (Enum.TryParse<UnitDesignation>(s, true, out var designation) && designation != UnitDesignation.Pixels)
         {
             unit = FromDesignation(designation);
             return true;
@@ -156,7 +138,7 @@ public readonly struct Unit : IEquatable<Unit>
 
         if(unit == default && s.StartsWith("dpi"))
         {
-            var match = Regex.Match(s, "^dpi\\(([0-9]+)\\)$");
+            var match = Regex.Match(s, "^dpi\\(([1-9][0-9]*(?:\\.[0-9]+)?)\\)$");
             if(match.Success && match.Groups.Count == 2)
             {
                 var dpi = int.Parse(match.Groups[1].Value);

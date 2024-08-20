@@ -67,4 +67,28 @@ public class SizeTests
         {
             new object[]{ new Size(1.23, 3.21, Unit.Millimeters) },
         };
+
+    [Theory]
+    [MemberData(nameof(DataForConvert_From_Json_IsCorrect))]
+    public void Convert_From_Json_IsCorrect(string value, Size expected)
+    {
+        // Act
+        var result = System.Text.Json.JsonSerializer.Deserialize<Size>(value);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    public static IEnumerable<object[]> DataForConvert_From_Json_IsCorrect
+        => new[]
+        {
+                new object[]
+                {
+                    "{ \"Width\": \"10mm\", \"Height\": \"20mm\" }",
+                    new Size(
+                        width: new Value(10, Unit.Millimeters),
+                        height: new Value(20, Unit.Millimeters)
+                    ),
+                }
+        };
 }

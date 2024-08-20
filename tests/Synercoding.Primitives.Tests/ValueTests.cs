@@ -233,6 +233,77 @@ namespace Synercoding.Primitives.Tests
             Assert.Equal(value, result);
         }
 
+        [Theory]
+        [MemberData(nameof(DataForConvert_To_Json_IsCorrect))]
+        public void Convert_To_Json_IsCorrect(Value value, string expected)
+        {
+            // Act
+            var result = System.Text.Json.JsonSerializer.Serialize(value);
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        [Theory]
+        [MemberData(nameof(DataForConvert_From_Json_IsCorrect))]
+        public void Convert_From_Json_IsCorrect(string value, Value expected)
+        {
+            // Act
+            var result = System.Text.Json.JsonSerializer.Deserialize<Value>(value);
+
+            // Assert
+            Assert.Equal(expected, result);
+        }
+
+        public static IEnumerable<object[]> DataForConvert_To_Json_IsCorrect
+            => new[]
+            {
+                new object[]{ new Value(1, Unit.Millimeters), "\"1 mm\"" },
+                new object[]{ new Value(10, Unit.Millimeters), "\"10 mm\"" },
+                new object[]{ new Value(-15, Unit.Millimeters), "\"-15 mm\"" },
+                new object[]{ new Value(1, Unit.Points), "\"1 pts\"" },
+                new object[]{ new Value(10, Unit.Points), "\"10 pts\"" },
+                new object[]{ new Value(-15, Unit.Points), "\"-15 pts\"" },
+                new object[]{ new Value(1, Unit.Inches), "\"1 in\"" },
+                new object[]{ new Value(10, Unit.Inches), "\"10 in\"" },
+                new object[]{ new Value(-15, Unit.Inches), "\"-15 in\"" },
+                new object[]{ new Value(1, Unit.Centimeters), "\"1 cm\"" },
+                new object[]{ new Value(10, Unit.Centimeters), "\"10 cm\"" },
+                new object[]{ new Value(-15, Unit.Centimeters), "\"-15 cm\"" },
+            };
+
+        public static IEnumerable<object[]> DataForConvert_From_Json_IsCorrect
+            => new[]
+            {
+                new object[]{ "\"1 mm\"", new Value(1, Unit.Millimeters) },
+                new object[]{ "\"10 mm\"", new Value(10, Unit.Millimeters) },
+                new object[]{ "\"-15 mm\"", new Value(-15, Unit.Millimeters) },
+                new object[]{ "\"1 pts\"", new Value(1, Unit.Points) },
+                new object[]{ "\"10 pts\"", new Value(10, Unit.Points) },
+                new object[]{ "\"-15 pts\"", new Value(-15, Unit.Points) },
+                new object[]{ "\"1 in\"", new Value(1, Unit.Inches) },
+                new object[]{ "\"10 in\"", new Value(10, Unit.Inches) },
+                new object[]{ "\"-15 in\"", new Value(-15, Unit.Inches) },
+                new object[]{ "\"1 cm\"", new Value(1, Unit.Centimeters) },
+                new object[]{ "\"10 cm\"", new Value(10, Unit.Centimeters) },
+                new object[]{ "\"-15 cm\"", new Value(-15, Unit.Centimeters) },
+
+                new object[]{ "\"1mm\"", new Value(1, Unit.Millimeters) },
+                new object[]{ "\"10mm\"", new Value(10, Unit.Millimeters) },
+                new object[]{ "\"-15mm\"", new Value(-15, Unit.Millimeters) },
+                new object[]{ "\"1pts\"", new Value(1, Unit.Points) },
+                new object[]{ "\"10pts\"", new Value(10, Unit.Points) },
+                new object[]{ "\"-15pts\"", new Value(-15, Unit.Points) },
+                new object[]{ "\"1in\"", new Value(1, Unit.Inches) },
+                new object[]{ "\"10in\"", new Value(10, Unit.Inches) },
+                new object[]{ "\"-15in\"", new Value(-15, Unit.Inches) },
+                new object[]{ "\"1cm\"", new Value(1, Unit.Centimeters) },
+                new object[]{ "\"10cm\"", new Value(10, Unit.Centimeters) },
+                new object[]{ "\"-15cm\"", new Value(-15, Unit.Centimeters) },
+
+                new object[]{ "{ \"Raw\": 12.3, \"Unit\": \"mm\" }", new Value(12.3, Unit.Millimeters) },
+            };
+
         public static IEnumerable<object[]> DataForToString_TryParse_Same_Value
             => new[]
             {
