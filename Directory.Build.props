@@ -35,65 +35,12 @@
     <RepositoryUrl>https://github.com/synercoder/Primitives/</RepositoryUrl>
     <RestoreSources>
       https://api.nuget.org/v3/index.json;
-      https://dotnetfeed.blob.core.windows.net/dotnet-core/index.json;
     </RestoreSources>
     <UseSharedCompilation>true</UseSharedCompilation>
   </PropertyGroup>
 
   <PropertyGroup>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>12.0</LangVersion>
   </PropertyGroup>
-
-
-  <!-- Define target framework specific constants.
-    https://apisof.net/
-    +===================+=======+==========+=====================+=============+=================+====================+==============+=========+============|===============|
-    | SUPPORTS          | MATHF | HASHCODE | EXTENDED_INTRINSICS | SPAN_STREAM | ENCODING_STRING | RUNTIME_INTRINSICS | CODECOVERAGE | HOTPATH | CREATESPAN | BITOPERATIONS |
-    +===================+=======+==========+=====================+=============+=================+====================+==============+=========|============|===============|
-    | >=netcoreapp3.1   |   Y   |    Y     |         Y           |      Y      |        Y        |        Y           |      Y       |    Y    |      Y     |       Y       |
-    | netstandard2.1    |   Y   |    Y     |         N           |      Y      |        Y        |        N           |      Y       |    N    |      Y     |       N       |
-    | netstandard2.0    |   N   |    N     |         N           |      N      |        N        |        N           |      Y       |    N    |      N     |       N       |
-    | net48             |   N   |    N     |         Y           |      N      |        N        |        N           |      Y       |    N    |      N     |       N       |
-    +===================+=======+==========+=====================+=============+=================+====================+==============+=========|============|===============|
-    -->
-  <Choose>
-    <When Condition="'$(TargetFramework)' == 'net48'">
-      <PropertyGroup>
-        <DefineConstants>$(DefineConstants);SUPPORTS_EXTENDED_INTRINSICS</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_CODECOVERAGE</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(TargetFramework)' == 'netstandard2.0'">
-      <PropertyGroup>
-        <DefineConstants>$(DefineConstants);SUPPORTS_EXTENDED_INTRINSICS</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_CODECOVERAGE</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition="'$(TargetFramework)' == 'netstandard2.1'">
-      <PropertyGroup>
-        <DefineConstants>$(DefineConstants);SUPPORTS_MATHF</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_HASHCODE</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_SPAN_STREAM</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_ENCODING_STRING</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_CODECOVERAGE</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_CREATESPAN</DefineConstants>
-      </PropertyGroup>
-    </When>
-    <When Condition="$([MSBuild]::IsTargetFrameworkCompatible('$(TargetFramework)','netcoreapp3.1'))">
-      <!--NETCORE 3.1. NET5.0, and future versions will fallback to this as the closest target.-->
-      <PropertyGroup>
-        <DefineConstants>$(DefineConstants);SUPPORTS_MATHF</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_HASHCODE</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_EXTENDED_INTRINSICS</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_SPAN_STREAM</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_ENCODING_STRING</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_RUNTIME_INTRINSICS</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_CODECOVERAGE</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_HOTPATH</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_CREATESPAN</DefineConstants>
-        <DefineConstants>$(DefineConstants);SUPPORTS_BITOPERATIONS</DefineConstants>
-      </PropertyGroup>
-    </When>
-  </Choose>
 
 </Project>

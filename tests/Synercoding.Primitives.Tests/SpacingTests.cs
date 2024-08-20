@@ -67,4 +67,31 @@ public class SpacingTests
         {
             new object[]{ new Spacing(1.23, 3.21, 12.34, 43.21, Unit.Millimeters) },
         };
+
+    [Theory]
+    [MemberData(nameof(DataForConvert_From_Json_IsCorrect))]
+    public void Convert_From_Json_IsCorrect(string value, Spacing expected)
+    {
+        // Act
+        var result = System.Text.Json.JsonSerializer.Deserialize<Spacing>(value);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    public static IEnumerable<object[]> DataForConvert_From_Json_IsCorrect
+        => new[]
+        {
+                new object[]
+                {
+                    "{ \"Left\": \"1mm\", \"Right\": \"2mm\", \"Top\": \"3mm\", \"Bottom\": \"4mm\" }",
+                    new Spacing(
+                        left: new Value(1, Unit.Millimeters),
+                        right: new Value(2, Unit.Millimeters),
+                        top: new Value(3, Unit.Millimeters),
+                        bottom: new Value(4, Unit.Millimeters)
+                    ),
+                },
+                new object[]{ "\"All: 5mm\"", new Spacing(new Value(5, Unit.Millimeters)) }
+        };
 }

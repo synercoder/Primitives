@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Synercoding.Primitives;
@@ -7,7 +8,8 @@ namespace Synercoding.Primitives;
 /// <summary>
 /// A value type representing a point in a 2D space.
 /// </summary>
-public readonly struct Point : IConvertable<Point>, IEquatable<Point>
+[JsonConverter(typeof(JsonConverters.PointJsonConverter))]
+public readonly record struct Point : IConvertable<Point>, IEquatable<Point>
 {
     /// <summary>
     /// Constructor for a <see cref="Point"/>.
@@ -52,12 +54,12 @@ public readonly struct Point : IConvertable<Point>, IEquatable<Point>
     /// <summary>
     /// The X coordinate.
     /// </summary>
-    public Value X { get; }
+    public Value X { get; init; }
 
     /// <summary>
     /// The Y coordinate.
     /// </summary>
-    public Value Y { get; }
+    public Value Y { get; init; }
 
     /// <inheritdoc />
     public Point ConvertTo(Unit unit)
@@ -72,10 +74,6 @@ public readonly struct Point : IConvertable<Point>, IEquatable<Point>
         => HashCode.Combine(X, Y);
 
     /// <inheritdoc />
-    public override bool Equals(object? obj)
-        => obj is Point unit && Equals(unit);
-
-    /// <inheritdoc />
     public bool Equals(Point other)
     {
         var a = this;
@@ -88,24 +86,6 @@ public readonly struct Point : IConvertable<Point>, IEquatable<Point>
     /// <inheritdoc />
     public override string ToString()
         => $"X: {X}, Y: {Y}";
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Point"/> values are equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(Point left, Point right)
-        => left.Equals(right);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Point"/> values are not equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are not equal; otherwise, false.</returns>
-    public static bool operator !=(Point left, Point right)
-        => !( left == right );
 
     /// <summary>
     /// Parse a string into a <see cref="Point"/>

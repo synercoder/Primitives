@@ -67,4 +67,28 @@ public class PointTests
         {
             new object[]{ new Point(1.23, 3.21, Unit.Millimeters) },
         };
+
+    [Theory]
+    [MemberData(nameof(DataForConvert_From_Json_IsCorrect))]
+    public void Convert_From_Json_IsCorrect(string value, Point expected)
+    {
+        // Act
+        var result = System.Text.Json.JsonSerializer.Deserialize<Point>(value);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    public static IEnumerable<object[]> DataForConvert_From_Json_IsCorrect
+        => new[]
+        {
+                new object[]
+                {
+                    "{ \"X\": \"10mm\", \"Y\": \"20mm\" }",
+                    new Point(
+                        x: new Value(10, Unit.Millimeters),
+                        y: new Value(20, Unit.Millimeters)
+                    ),
+                }
+        };
 }
