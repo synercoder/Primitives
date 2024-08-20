@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Synercoding.Primitives;
@@ -7,7 +8,8 @@ namespace Synercoding.Primitives;
 /// <summary>
 /// A value type representing a size using <see cref="Width"/> and <see cref="Height"/>.
 /// </summary>
-public readonly struct Size : IConvertable<Size>, IEquatable<Size>
+[JsonConverter(typeof(JsonConverters.SizeJsonConverter))]
+public readonly record struct Size : IConvertable<Size>, IEquatable<Size>
 {
     /// <summary>
     /// Constructor for a <see cref="Size"/>.
@@ -52,12 +54,12 @@ public readonly struct Size : IConvertable<Size>, IEquatable<Size>
     /// <summary>
     /// The width property.
     /// </summary>
-    public Value Width { get; }
+    public Value Width { get; init; }
 
     /// <summary>
     /// The height property.
     /// </summary>
-    public Value Height { get; }
+    public Value Height { get; init; }
 
     /// <summary>
     /// The rotated version of this <see cref="Size"/>.
@@ -93,10 +95,6 @@ public readonly struct Size : IConvertable<Size>, IEquatable<Size>
         => HashCode.Combine(Width, Height);
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
-        => obj is Size unit && Equals(unit);
-
-    /// <inheritdoc/>
     public bool Equals(Size other)
     {
         var a = this;
@@ -109,24 +107,6 @@ public readonly struct Size : IConvertable<Size>, IEquatable<Size>
     /// <inheritdoc/>
     public override string ToString()
         => $"W: {Width}, H: {Height}";
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Size"/> values are equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(Size left, Size right)
-        => left.Equals(right);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Size"/> values are not equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are not equal; otherwise, false.</returns>
-    public static bool operator !=(Size left, Size right)
-        => !( left == right );
 
     /// <summary>
     /// Parse a string into a <see cref="Size"/>

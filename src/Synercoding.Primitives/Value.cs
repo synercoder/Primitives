@@ -2,6 +2,7 @@ using Synercoding.Primitives.Abstract;
 using Synercoding.Primitives.Extensions;
 using System;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace Synercoding.Primitives;
 
@@ -9,7 +10,8 @@ namespace Synercoding.Primitives;
 /// Represents a double with a unit type attached.
 /// </summary>
 /// <example>3mm or 2 inches</example>
-public readonly struct Value : IConvertable<Value>, IComparable, IComparable<Value>, IEquatable<Value>
+[JsonConverter(typeof(JsonConverters.ValueJsonConverter))]
+public readonly record struct Value : IConvertable<Value>, IComparable, IComparable<Value>, IEquatable<Value>
 {
     private const int ROUND_DIGITS = 15;
 
@@ -27,12 +29,12 @@ public readonly struct Value : IConvertable<Value>, IComparable, IComparable<Val
     /// <summary>
     /// The number part of the <see cref="Value"/>.
     /// </summary>
-    public double Raw { get; }
+    public double Raw { get; init; }
 
     /// <summary>
     /// The unit part of the <see cref="Value"/>.
     /// </summary>
-    public Unit Unit { get; }
+    public Unit Unit { get; init; }
 
     /// <inheritdoc />
     public Value ConvertTo(Unit unit)
@@ -78,10 +80,6 @@ public readonly struct Value : IConvertable<Value>, IComparable, IComparable<Val
         => $"{Raw.ToString(CultureInfo.InvariantCulture)} {Unit.Designation.Shortform()}";
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
-        => obj is Value unit && Equals(unit);
-
-    /// <inheritdoc/>
     public bool Equals(Value other)
         => CompareTo(other) == 0;
 
@@ -89,24 +87,6 @@ public readonly struct Value : IConvertable<Value>, IComparable, IComparable<Val
     /// Represents a value of zero
     /// </summary>
     public static Value Zero => new Value(0, Unit.Inches);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Value"/> values are equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(Value left, Value right)
-        => left.Equals(right);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Value"/> values are not equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are not equal; otherwise, false.</returns>
-    public static bool operator !=(Value left, Value right)
-        => !( left == right );
 
     /// <summary>
     /// Returns a value that indicates whether a specified <see cref="Value"/> value is less than another specified <see cref="Value"/> value.

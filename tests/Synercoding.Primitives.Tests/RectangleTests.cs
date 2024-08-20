@@ -83,4 +83,30 @@ public class RectangleTests
         {
             new object[]{ new Rectangle(1.23, 3.21, 12.34, 43.21, Unit.Millimeters) },
         };
+
+    [Theory]
+    [MemberData(nameof(DataForConvert_From_Json_IsCorrect))]
+    public void Convert_From_Json_IsCorrect(string value, Rectangle expected)
+    {
+        // Act
+        var result = System.Text.Json.JsonSerializer.Deserialize<Rectangle>(value);
+
+        // Assert
+        Assert.Equal(expected, result);
+    }
+
+    public static IEnumerable<object[]> DataForConvert_From_Json_IsCorrect
+        => new[]
+        {
+                new object[]
+                {
+                    "{ \"LLX\": \"1mm\", \"LLY\": \"2mm\", \"URX\": \"3mm\", \"URY\": \"4mm\" }",
+                    new Rectangle(
+                        llx: new Value(1, Unit.Millimeters),
+                        lly: new Value(2, Unit.Millimeters),
+                        urx: new Value(3, Unit.Millimeters),
+                        ury: new Value(4, Unit.Millimeters)
+                    ),
+                },
+        };
 }

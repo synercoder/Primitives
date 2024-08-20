@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
 namespace Synercoding.Primitives;
@@ -7,7 +8,8 @@ namespace Synercoding.Primitives;
 /// <summary>
 /// Value type representing a rectangle.
 /// </summary>
-public readonly struct Rectangle : IConvertable<Rectangle>, IEquatable<Rectangle>
+[JsonConverter(typeof(JsonConverters.RectangleJsonConverter))]
+public readonly record struct Rectangle : IConvertable<Rectangle>, IEquatable<Rectangle>
 {
     /// <summary>
     /// Constructor for <see cref="Rectangle"/>.
@@ -88,22 +90,22 @@ public readonly struct Rectangle : IConvertable<Rectangle>, IEquatable<Rectangle
     /// <summary>
     /// The lower left x coordinate.
     /// </summary>
-    public Value LLX { get; }
+    public Value LLX { get; init; }
 
     /// <summary>
     /// The lower left y coordinate.
     /// </summary>
-    public Value LLY { get; }
+    public Value LLY { get; init; }
 
     /// <summary>
     /// The upper right x coordinate.
     /// </summary>
-    public Value URX { get; }
+    public Value URX { get; init; }
 
     /// <summary>
     /// The upper right y coordinate.
     /// </summary>
-    public Value URY { get; }
+    public Value URY { get; init; }
 
     /// <summary>
     /// The width of this <see cref="Rectangle"/>.
@@ -144,10 +146,6 @@ public readonly struct Rectangle : IConvertable<Rectangle>, IEquatable<Rectangle
         => HashCode.Combine(LLX, LLY, URX, URY);
 
     /// <inheritdoc/>
-    public override bool Equals(object? obj)
-        => obj is Rectangle unit && Equals(unit);
-
-    /// <inheritdoc/>
     public bool Equals(Rectangle other)
     {
         var a = this;
@@ -162,24 +160,6 @@ public readonly struct Rectangle : IConvertable<Rectangle>, IEquatable<Rectangle
     /// <inheritdoc/>
     public override string ToString()
         => $"LLX: {LLX}, LLY: {LLY}, URX: {URX}, URY: {URY}";
-
-    /// <summary>
-    /// Returns a value that indicates whether two specified <see cref="Rectangle"/> values are equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are equal; otherwise, false.</returns>
-    public static bool operator ==(Rectangle left, Rectangle right)
-        => left.Equals(right);
-
-    /// <summary>
-    ///  Returns a value that indicates whether two specified <see cref="Rectangle"/> values are not equal.
-    /// </summary>
-    /// <param name="left">The first value to compare.</param>
-    /// <param name="right">The second value to compare.</param>
-    /// <returns>true if left and right are not equal; otherwise, false.</returns>
-    public static bool operator !=(Rectangle left, Rectangle right)
-        => !( left == right );
 
     /// <summary>
     /// Parse a string into a <see cref="Rectangle"/>
