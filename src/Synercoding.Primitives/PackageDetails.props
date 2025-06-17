@@ -10,7 +10,7 @@
     <Product>Synercoding.Primitives</Product>
     <Title>Synercoding.Primitives</Title>
     <Description>Primitives with units attached (think mm, cm, in, px) that can be used for 2D graphics.</Description>
-    <PackageReleaseNotes>Limit to latest .NET version (8) and add System.Json serialization support.</PackageReleaseNotes>
+    <PackageReleaseNotes>Added IParsable support and added overload for ToString to be culture aware.</PackageReleaseNotes>
   </PropertyGroup>
 
 </Project>
