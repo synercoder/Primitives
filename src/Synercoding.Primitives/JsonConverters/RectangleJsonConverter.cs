@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -80,6 +81,6 @@ public class RectangleJsonConverter : JsonConverter<Rectangle>
     /// <param name="options">An object that specifies serialization options to use.</param>
     public override void Write(Utf8JsonWriter writer, Rectangle value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value.ToString());
+        writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
     }
 }

@@ -44,7 +44,7 @@ public class UnitJsonConverter : JsonConverter<Unit>
     /// <param name="options">An object that specifies serialization options to use.</param>
     public override void Write(Utf8JsonWriter writer, Unit value, JsonSerializerOptions options)
     {
-        writer.WriteStringValue(value.ToString());
+        writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
     }
 }
 

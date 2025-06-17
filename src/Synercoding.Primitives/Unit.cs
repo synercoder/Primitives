@@ -44,9 +44,17 @@ public readonly record struct Unit : IEquatable<Unit>, IParsable<Unit>
 
     /// <inheritdoc/>
     public override string ToString()
+        => ToString(null);
+
+    /// <summary>
+    /// Returns a string representation of the unit using the specified format provider.
+    /// </summary>
+    /// <param name="formatProvider">The format provider to use for formatting numeric values in pixel units (DPI). Ignored for other unit types.</param>
+    /// <returns>A string representation of the unit. For pixel units, returns "dpi(value)" format. For other units, returns their short form (e.g., "mm", "cm", "in", "pts").</returns>
+    public string ToString(IFormatProvider? formatProvider)
         => Designation switch
         {
-            UnitDesignation.Pixels => $"dpi({PerInch})",
+            UnitDesignation.Pixels => $"dpi({PerInch.ToString(formatProvider)})",
             var x => x.Shortform()
         };
 
