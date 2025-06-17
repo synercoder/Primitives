@@ -1,10 +1,12 @@
 using System.Collections.Generic;
+using System.Globalization;
 using Xunit;
 
 namespace Synercoding.Primitives.Tests;
 
 public class PointTests
 {
+
     [Fact]
     public void EqualityOperator_InchAndMillimeters_NotEqual()
     {
@@ -35,10 +37,10 @@ public class PointTests
 
     [Theory]
     [MemberData(nameof(DataForTryParse_With_IsCorrect))]
-    public void TryParse_With_IsCorrect(string input, Point value)
+    public void TryParse_With_IsCorrect(string input, Point value, CultureInfo culture)
     {
         // Act
-        _ = Point.TryParse(input, out var result);
+        _ = Point.TryParse(input, culture, out var result);
 
         // Assert
         Assert.Equal(value, result);
@@ -47,16 +49,21 @@ public class PointTests
     public static IEnumerable<object[]> DataForTryParse_With_IsCorrect
         => new[]
         {
-            new object[]{ "X:11 mm,Y:123.14 mm", new Point(11, 123.14, Unit.Millimeters) },
+            new object[]{ "X:11 mm,Y:123.14 mm", new Point(11, 123.14, Unit.Millimeters), CultureInfo.InvariantCulture },
+            new object[]{ "X:1.5 mm,Y:2.75 cm", new Point(new Value(1.5, Unit.Millimeters), new Value(2.75, Unit.Centimeters)), new CultureInfo("en-US") },
+            new object[]{ "X:1,5 mm,Y:2,75 cm", new Point(new Value(1.5, Unit.Millimeters), new Value(2.75, Unit.Centimeters)), new CultureInfo("de-DE") },
+            new object[]{ "X:1,5 mm,Y:2,75 cm", new Point(new Value(1.5, Unit.Millimeters), new Value(2.75, Unit.Centimeters)), new CultureInfo("fr-FR") },
+            new object[]{ "X:1,234.56 in,Y:-789.12 pts", new Point(new Value(1234.56, Unit.Inches), new Value(-789.12, Unit.Points)), new CultureInfo("en-US") },
+            new object[]{ "X:1.234,56 in,Y:-789,12 pts", new Point(new Value(1234.56, Unit.Inches), new Value(-789.12, Unit.Points)), new CultureInfo("de-DE") },
         };
 
     [Theory]
     [MemberData(nameof(DataForToString_TryParse_Same_Value))]
-    public void ToString_TryParse_Same_Value(Point input)
+    public void ToString_TryParse_Same_Value(Point input, CultureInfo culture)
     {
         // Act
-        var asText = input.ToString();
-        var parsed = Point.Parse(asText);
+        var asText = input.ToString(culture);
+        var parsed = Point.Parse(asText, culture);
 
         // Assert
         Assert.Equal(input, parsed);
@@ -65,7 +72,13 @@ public class PointTests
     public static IEnumerable<object[]> DataForToString_TryParse_Same_Value
         => new[]
         {
-            new object[]{ new Point(1.23, 3.21, Unit.Millimeters) },
+            new object[]{ new Point(1.23, 3.21, Unit.Millimeters), CultureInfo.InvariantCulture },
+            new object[]{ new Point(1.5, 2.75, Unit.Millimeters), new CultureInfo("en-US") },
+            new object[]{ new Point(1.5, 2.75, Unit.Centimeters), new CultureInfo("de-DE") },
+            new object[]{ new Point(3.25, 4.5, Unit.Inches), new CultureInfo("fr-FR") },
+            new object[]{ new Point(new Value(1234.56, Unit.Millimeters), new Value(-789.12, Unit.Points)), new CultureInfo("en-US") },
+            new object[]{ new Point(new Value(1234.56, Unit.Millimeters), new Value(-789.12, Unit.Points)), new CultureInfo("de-DE") },
+            new object[]{ new Point(new Value(1234.56, Unit.Millimeters), new Value(-789.12, Unit.Points)), new CultureInfo("fr-FR") },
         };
 
     [Theory]

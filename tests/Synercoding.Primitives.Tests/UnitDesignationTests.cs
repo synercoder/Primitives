@@ -1,6 +1,5 @@
 using Synercoding.Primitives.Extensions;
 using System;
-using System.Linq;
 using Xunit;
 
 namespace Synercoding.Primitives.Tests;
@@ -10,8 +9,8 @@ public class UnitDesignationTests
     [Fact]
     public void Shortform_AllEnums_HaveShortform()
     {
-        // Arrange
-        var unitDesignations = Enum.GetValues(typeof(UnitDesignation)).OfType<UnitDesignation>();
+        // Arrange        
+        var unitDesignations = Enum.GetValues<UnitDesignation>();
 
         // Act
         foreach (var designation in unitDesignations)

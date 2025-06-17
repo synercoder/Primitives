@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -9,7 +10,7 @@ namespace Synercoding.Primitives;
 /// Value type representing a rectangle.
 /// </summary>
 [JsonConverter(typeof(JsonConverters.RectangleJsonConverter))]
-public readonly record struct Rectangle : IConvertable<Rectangle>, IEquatable<Rectangle>
+public readonly record struct Rectangle : IConvertable<Rectangle>, IEquatable<Rectangle>, IParsable<Rectangle>
 {
     /// <summary>
     /// Constructor for <see cref="Rectangle"/>.
@@ -159,7 +160,15 @@ public readonly record struct Rectangle : IConvertable<Rectangle>, IEquatable<Re
 
     /// <inheritdoc/>
     public override string ToString()
-        => $"LLX: {LLX}, LLY: {LLY}, URX: {URX}, URY: {URY}";
+        => ToString(null);
+
+    /// <summary>
+    /// Returns a string representation of the rectangle using the specified format provider.
+    /// </summary>
+    /// <param name="provider">The format provider to use for formatting numeric values.</param>
+    /// <returns>A string representation of the rectangle.</returns>
+    public string ToString(IFormatProvider? provider)
+        => $"LLX: {LLX.ToString(provider)}, LLY: {LLY.ToString(provider)}, URX: {URX.ToString(provider)}, URY: {URY.ToString(provider)}";
 
     /// <summary>
     /// Parse a string into a <see cref="Rectangle"/>
@@ -168,8 +177,27 @@ public readonly record struct Rectangle : IConvertable<Rectangle>, IEquatable<Re
     /// <returns>A <see cref="Rectangle"/> that was represented by <paramref name="s"/>.</returns>
     /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
     public static Rectangle Parse(string s)
+        => Parse(s, null);
+
+    /// <summary>
+    /// Try to converts a string representation of a <see cref="Rectangle"/> into a <see cref="Rectangle"/>.
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="result">Out parameter with the parsed <see cref="Rectangle"/>.</param>
+    /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
+    public static bool TryParse([NotNullWhen(true)] string s, out Rectangle result)
+        => TryParse(s, null, out result);
+
+    /// <summary>
+    /// Parse a string into a <see cref="Rectangle"/>
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <returns>A <see cref="Rectangle"/> that was represented by <paramref name="s"/>.</returns>
+    /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
+    public static Rectangle Parse(string s, IFormatProvider? provider)
     {
-        if (TryParse(s, out var value))
+        if (TryParse(s, provider, out var value))
             return value;
 
         throw new ArgumentException("Argument can't be parsed.", nameof(s));
@@ -179,23 +207,27 @@ public readonly record struct Rectangle : IConvertable<Rectangle>, IEquatable<Re
     /// Try to converts a string representation of a <see cref="Rectangle"/> into a <see cref="Rectangle"/>.
     /// </summary>
     /// <param name="s"><see cref="string"/> to be parsed.</param>
-    /// <param name="rectangle">Ref parameter with the parsed <see cref="Rectangle"/>.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <param name="result">Out parameter with the parsed <see cref="Rectangle"/>.</param>
     /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
-    public static bool TryParse(string s, out Rectangle rectangle)
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Rectangle result)
     {
-        rectangle = default;
+        result = default;
+
+        if(s is null)
+            return false;
 
         s = s.Trim();
 
         var match = Regex.Match(s, "^LLX: ?(.+), ?LLY: ?(.+), ?URX: ?(.+), ?URY: ?(.+)$");
         if (match.Success && match.Groups.Count == 5)
         {
-            if (Value.TryParse(match.Groups[1].Value, out var llx)
-                && Value.TryParse(match.Groups[2].Value, out var lly)
-                && Value.TryParse(match.Groups[3].Value, out var urx)
-                && Value.TryParse(match.Groups[4].Value, out var ury))
+            if (Value.TryParse(match.Groups[1].Value, provider, out var llx)
+                && Value.TryParse(match.Groups[2].Value, provider, out var lly)
+                && Value.TryParse(match.Groups[3].Value, provider, out var urx)
+                && Value.TryParse(match.Groups[4].Value, provider, out var ury))
             {
-                rectangle = new Rectangle(llx, lly, urx, ury);
+                result = new Rectangle(llx, lly, urx, ury);
                 return true;
             }
         }

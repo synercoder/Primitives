@@ -34,10 +34,10 @@ public static class ValueCreator
     public static Value Pts(double pts) => new Value(pts, Unit.Points);
 
     /// <summary>
-    /// Create a new <see cref="Value"/> with <see cref="Unit"/> <see cref="Unit.Pixels(int)"/>
+    /// Create a new <see cref="Value"/> with <see cref="Unit"/> <see cref="Unit.Pixels(double)"/>
     /// </summary>
     /// <param name="dots">The amount of pixels</param>
     /// <param name="dpi">The dpi</param>
     /// <returns>A new <see cref="Value"/> object.</returns>
-    public static Value Pixels(double dots, int dpi) => new Value(dots, Unit.Pixels(dpi));
+    public static Value Pixels(double dots, double dpi) => new Value(dots, Unit.Pixels(dpi));
 }

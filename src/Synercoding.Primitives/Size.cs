@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -9,7 +10,7 @@ namespace Synercoding.Primitives;
 /// A value type representing a size using <see cref="Width"/> and <see cref="Height"/>.
 /// </summary>
 [JsonConverter(typeof(JsonConverters.SizeJsonConverter))]
-public readonly record struct Size : IConvertable<Size>, IEquatable<Size>
+public readonly record struct Size : IConvertable<Size>, IEquatable<Size>, IParsable<Size>
 {
     /// <summary>
     /// Constructor for a <see cref="Size"/>.
@@ -106,7 +107,15 @@ public readonly record struct Size : IConvertable<Size>, IEquatable<Size>
 
     /// <inheritdoc/>
     public override string ToString()
-        => $"W: {Width}, H: {Height}";
+        => ToString(null);
+
+    /// <summary>
+    /// Returns a string representation of the size using the specified format provider.
+    /// </summary>
+    /// <param name="provider">The format provider to use for formatting numeric values.</param>
+    /// <returns>A string representation of the size.</returns>
+    public string ToString(IFormatProvider? provider)
+        => $"W: {Width.ToString(provider)}, H: {Height.ToString(provider)}";
 
     /// <summary>
     /// Parse a string into a <see cref="Size"/>
@@ -115,8 +124,27 @@ public readonly record struct Size : IConvertable<Size>, IEquatable<Size>
     /// <returns>A <see cref="Size"/> that was represented by <paramref name="s"/>.</returns>
     /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
     public static Size Parse(string s)
+        => Parse(s, null);
+
+    /// <summary>
+    /// Try to converts a string representation of a <see cref="Size"/> into a <see cref="Size"/>.
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="result">Ref parameter with the parsed <see cref="Size"/>.</param>
+    /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
+    public static bool TryParse([NotNullWhen(true)] string s, out Size result)
+        => TryParse(s, null, out result);
+
+    /// <summary>
+    /// Parse a string into a <see cref="Size"/>
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <returns>A <see cref="Size"/> that was represented by <paramref name="s"/>.</returns>
+    /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
+    public static Size Parse(string s, IFormatProvider? provider)
     {
-        if (TryParse(s, out var value))
+        if (TryParse(s, provider, out var value))
             return value;
 
         throw new ArgumentException("Argument can't be parsed.", nameof(s));
@@ -126,20 +154,24 @@ public readonly record struct Size : IConvertable<Size>, IEquatable<Size>
     /// Try to converts a string representation of a <see cref="Size"/> into a <see cref="Size"/>.
     /// </summary>
     /// <param name="s"><see cref="string"/> to be parsed.</param>
-    /// <param name="size">Ref parameter with the parsed <see cref="Size"/>.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <param name="result">Out parameter with the parsed <see cref="Size"/>.</param>
     /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
-    public static bool TryParse(string s, out Size size)
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Size result)
     {
-        size = default;
+        result = default;
+
+        if (s is null)
+            return false;
 
         s = s.Trim();
 
         var match = Regex.Match(s, "^W: ?(.+), ?H: ?(.+)$");
         if (match.Success && match.Groups.Count == 3)
         {
-            if(Value.TryParse(match.Groups[1].Value, out var width) && Value.TryParse(match.Groups[2].Value, out var height))
+            if (Value.TryParse(match.Groups[1].Value, provider, out var width) && Value.TryParse(match.Groups[2].Value, provider, out var height))
             {
-                size = new Size(width, height);
+                result = new Size(width, height);
                 return true;
             }
         }
