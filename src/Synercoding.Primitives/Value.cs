@@ -1,6 +1,7 @@
 using Synercoding.Primitives.Abstract;
 using Synercoding.Primitives.Extensions;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
@@ -11,7 +12,7 @@ namespace Synercoding.Primitives;
 /// </summary>
 /// <example>3mm or 2 inches</example>
 [JsonConverter(typeof(JsonConverters.ValueJsonConverter))]
-public readonly record struct Value : IConvertable<Value>, IComparable, IComparable<Value>, IEquatable<Value>
+public readonly record struct Value : IConvertable<Value>, IComparable, IComparable<Value>, IEquatable<Value>, IParsable<Value>
 {
     private const int ROUND_DIGITS = 15;
 
@@ -77,7 +78,15 @@ public readonly record struct Value : IConvertable<Value>, IComparable, ICompara
 
     /// <inheritdoc/>
     public override string ToString()
-        => $"{Raw.ToString(CultureInfo.InvariantCulture)} {Unit.Designation.Shortform()}";
+        => ToString(null);
+
+    /// <summary>
+    /// Returns a string representation of the value using the specified format provider.
+    /// </summary>
+    /// <param name="provider">The format provider to use for formatting numeric values.</param>
+    /// <returns>A string representation of the value.</returns>
+    public string ToString(IFormatProvider? provider)
+        => $"{Raw.ToString(provider)} {Unit.Designation.Shortform()}";
 
     /// <inheritdoc/>
     public bool Equals(Value other)
@@ -234,9 +243,33 @@ public readonly record struct Value : IConvertable<Value>, IComparable, ICompara
     /// <param name="s"><see cref="string"/> to be parsed.</param>
     /// <returns>A <see cref="Value"/> that was represented by <paramref name="s"/>.</returns>
     /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
-    public static Value Parse(string s)
+    /// <exception cref="ArgumentNullException">Throws when <paramref name="s"/> is null.</exception>
+    public static Value Parse(string? s)
+        => Parse(s, null);
+
+    /// <summary>
+    /// Try to converts a string representation of a <see cref="Value"/> into a <see cref="Value"/>.
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="value">Out parameter with the parsed <see cref="Value"/>.</param>
+    /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
+    public static bool TryParse([NotNullWhen(true)] string? s, out Value value)
+        => TryParse(s, null, out value);
+
+    /// <summary>
+    /// Parse a string into a <see cref="Value"/>
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <returns>The parsed value</returns>
+    /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
+    /// <exception cref="ArgumentNullException">Throws when <paramref name="s"/> is null.</exception>
+    public static Value Parse(string? s, IFormatProvider? provider)
     {
-        if (TryParse(s, out var value))
+        if (s is null)
+            throw new ArgumentNullException(nameof(s));
+
+        if (TryParse(s, provider, out var value))
             return value;
 
         throw new ArgumentException("Argument can't be parsed.", nameof(s));
@@ -246,11 +279,15 @@ public readonly record struct Value : IConvertable<Value>, IComparable, ICompara
     /// Try to converts a string representation of a <see cref="Value"/> into a <see cref="Value"/>.
     /// </summary>
     /// <param name="s"><see cref="string"/> to be parsed.</param>
-    /// <param name="value">Ref parameter with the parsed <see cref="Value"/>.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <param name="result">Out parameter with the parsed <see cref="Value"/>.</param>
     /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
-    public static bool TryParse(string s, out Value value)
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Value result)
     {
-        value = default;
+        result = default;
+
+        if (s is null)
+            return false;
 
         s = s.Trim();
 
@@ -258,9 +295,9 @@ public readonly record struct Value : IConvertable<Value>, IComparable, ICompara
 
         while (index < s.Length)
         {
-            if (Unit.TryParse(s.Substring(index), out var unit) && double.TryParse(s.Substring(0, index), NumberStyles.Float | NumberStyles.AllowThousands, CultureInfo.InvariantCulture, out var number))
+            if (Unit.TryParse(s.Substring(index), provider, out var unit) && double.TryParse(s.Substring(0, index), provider, out var number))
             {
-                value = new Value(number, unit);
+                result = new Value(number, unit);
                 return true;
             }
             index++;

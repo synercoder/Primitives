@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -9,7 +10,7 @@ namespace Synercoding.Primitives;
 /// A value type representing a point in a 2D space.
 /// </summary>
 [JsonConverter(typeof(JsonConverters.PointJsonConverter))]
-public readonly record struct Point : IConvertable<Point>, IEquatable<Point>
+public readonly record struct Point : IConvertable<Point>, IEquatable<Point>, IParsable<Point>
 {
     /// <summary>
     /// Constructor for a <see cref="Point"/>.
@@ -85,7 +86,15 @@ public readonly record struct Point : IConvertable<Point>, IEquatable<Point>
 
     /// <inheritdoc />
     public override string ToString()
-        => $"X: {X}, Y: {Y}";
+        => ToString(null);
+
+    /// <summary>
+    /// Returns a string representation of the point using the specified format provider.
+    /// </summary>
+    /// <param name="provider">The format provider to use for formatting numeric values.</param>  
+    /// <returns>A string representation of the point.</returns>
+    public string ToString(IFormatProvider? provider)
+        => $"X: {X.ToString(provider)}, Y: {Y.ToString(provider)}";
 
     /// <summary>
     /// Parse a string into a <see cref="Point"/>
@@ -94,8 +103,27 @@ public readonly record struct Point : IConvertable<Point>, IEquatable<Point>
     /// <returns>A <see cref="Point"/> that was represented by <paramref name="s"/>.</returns>
     /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
     public static Point Parse(string s)
+        => Parse(s, null);
+
+    /// <summary>
+    /// Try to converts a string representation of a <see cref="Point"/> into a <see cref="Point"/>.
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="point">Ref parameter with the parsed <see cref="Point"/>.</param>
+    /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
+    public static bool TryParse([NotNullWhen(true)] string? s, out Point point)
+        => TryParse(s, null, out point);
+
+    /// <summary>
+    /// Parse a string into a <see cref="Point"/>
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <returns>A <see cref="Point"/> that was represented by <paramref name="s"/>.</returns>
+    /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
+    public static Point Parse(string s, IFormatProvider? provider)
     {
-        if (TryParse(s, out var value))
+        if (TryParse(s, provider, out var value))
             return value;
 
         throw new ArgumentException("Argument can't be parsed.", nameof(s));
@@ -105,20 +133,24 @@ public readonly record struct Point : IConvertable<Point>, IEquatable<Point>
     /// Try to converts a string representation of a <see cref="Point"/> into a <see cref="Point"/>.
     /// </summary>
     /// <param name="s"><see cref="string"/> to be parsed.</param>
-    /// <param name="point">Ref parameter with the parsed <see cref="Point"/>.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <param name="result">Out parameter with the parsed <see cref="Point"/>.</param>
     /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
-    public static bool TryParse(string s, out Point point)
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Point result)
     {
-        point = default;
+        result = default;
+
+        if (s is null)
+            return false;
 
         s = s.Trim();
 
         var match = Regex.Match(s, "^X: ?(.+), ?Y: ?(.+)$");
         if (match.Success && match.Groups.Count == 3)
         {
-            if (Value.TryParse(match.Groups[1].Value, out var x) && Value.TryParse(match.Groups[2].Value, out var y))
+            if (Value.TryParse(match.Groups[1].Value, provider, out var x) && Value.TryParse(match.Groups[2].Value, provider, out var y))
             {
-                point = new Point(x, y);
+                result = new Point(x, y);
                 return true;
             }
         }

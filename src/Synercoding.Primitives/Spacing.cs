@@ -1,5 +1,6 @@
 using Synercoding.Primitives.Abstract;
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 
@@ -9,7 +10,7 @@ namespace Synercoding.Primitives;
 /// Value type representing spacing in or around an object.
 /// </summary>
 [JsonConverter(typeof(JsonConverters.SpacingJsonConverter))]
-public readonly record struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>
+public readonly record struct Spacing : IConvertable<Spacing>, IEquatable<Spacing>, IParsable<Spacing>
 {
     /// <summary>
     /// Constructor for <see cref="Spacing"/>.
@@ -117,11 +118,19 @@ public readonly record struct Spacing : IConvertable<Spacing>, IEquatable<Spacin
 
     /// <inheritdoc/>
     public override string ToString()
+        => ToString(null);
+
+    /// <summary>
+    /// Returns a string representation of the spacing using the specified format provider.
+    /// </summary>
+    /// <param name="provider">The format provider to use for formatting numeric values.</param>
+    /// <returns>A string representation of the spacing.</returns>
+    public string ToString(IFormatProvider? provider)
     {
         if (Left == Top && Top == Right && Right == Bottom)
-            return $"All: {Left}";
+            return $"All: {Left.ToString(provider)}";
 
-        return $"L: {Left}, T: {Top}, R: {Right}, B: {Bottom}";
+        return $"L: {Left.ToString(provider)}, T: {Top.ToString(provider)}, R: {Right.ToString(provider)}, B: {Bottom.ToString(provider)}";
     }
 
     /// <inheritdoc/>
@@ -143,8 +152,27 @@ public readonly record struct Spacing : IConvertable<Spacing>, IEquatable<Spacin
     /// <returns>A <see cref="Spacing"/> that was represented by <paramref name="s"/>.</returns>
     /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
     public static Spacing Parse(string s)
+        => Parse(s, null);
+
+    /// <summary>
+    /// Try to converts a string representation of a <see cref="Spacing"/> into a <see cref="Spacing"/>.
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="result">Ref parameter with the parsed <see cref="Spacing"/>.</param>
+    /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
+    public static bool TryParse([NotNullWhen(true)] string? s, [MaybeNullWhen(false)] out Spacing result)
+        => TryParse(s, null, out result);
+
+    /// <summary>
+    /// Parse a string into a <see cref="Spacing"/>
+    /// </summary>
+    /// <param name="s"><see cref="string"/> to be parsed.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <returns>A <see cref="Spacing"/> that was represented by <paramref name="s"/>.</returns>
+    /// <exception cref="ArgumentException">Throws if <paramref name="s"/> can not be parsed.</exception>
+    public static Spacing Parse(string s, IFormatProvider? provider)
     {
-        if (TryParse(s, out var value))
+        if (TryParse(s, provider, out var value))
             return value;
 
         throw new ArgumentException("Argument can't be parsed.", nameof(s));
@@ -154,29 +182,33 @@ public readonly record struct Spacing : IConvertable<Spacing>, IEquatable<Spacin
     /// Try to converts a string representation of a <see cref="Spacing"/> into a <see cref="Spacing"/>.
     /// </summary>
     /// <param name="s"><see cref="string"/> to be parsed.</param>
-    /// <param name="spacing">Ref parameter with the parsed <see cref="Spacing"/>.</param>
+    /// <param name="provider">Format provider used when parsing values.</param>
+    /// <param name="result">Out parameter with the parsed <see cref="Spacing"/>.</param>
     /// <returns>A <see cref="bool"/> to indicate if the parsing was successful.</returns>
-    public static bool TryParse(string s, out Spacing spacing)
+    public static bool TryParse([NotNullWhen(true)] string? s, IFormatProvider? provider, [MaybeNullWhen(false)] out Spacing result)
     {
-        spacing = default;
+        result = default;
+
+        if (s is null)
+            return false;
 
         s = s.Trim();
 
         if (s.StartsWith("All:") && Value.TryParse(s.Substring(4).TrimStart(), out var all))
         {
-            spacing = new Spacing(all);
+            result = new Spacing(all);
             return true;
         }
 
         var match = Regex.Match(s, "^L: ?(.+), ?T: ?(.+), ?R: ?(.+), ?B: ?(.+)$");
         if (match.Success && match.Groups.Count == 5)
         {
-            if (Value.TryParse(match.Groups[1].Value, out var left)
-                && Value.TryParse(match.Groups[2].Value, out var top)
-                && Value.TryParse(match.Groups[3].Value, out var right)
-                && Value.TryParse(match.Groups[4].Value, out var bottom))
+            if (Value.TryParse(match.Groups[1].Value, provider, out var left)
+                && Value.TryParse(match.Groups[2].Value, provider, out var top)
+                && Value.TryParse(match.Groups[3].Value, provider, out var right)
+                && Value.TryParse(match.Groups[4].Value, provider, out var bottom))
             {
-                spacing = new Spacing(left, top, right, bottom);
+                result = new Spacing(left, top, right, bottom);
                 return true;
             }
         }
